@@ -199,7 +199,7 @@
     </file>
     <file>
       <fileMode>755</fileMode>
-      <source>${basedir}/target/src/ambari-agent</source>
+      <source>${basedir}/target/ambari-agent</source>
       <outputDirectory>/var/lib/ambari-agent/bin</outputDirectory>
     </file>
     <file>
@@ -229,7 +229,7 @@
     </file>
     <file>
       <fileMode>644</fileMode>
-      <source>${basedir}/target/src/version</source>
+      <source>${basedir}/target/version</source>
       <outputDirectory>/var/lib/${project.artifactId}/data</outputDirectory>
     </file>
   </files>

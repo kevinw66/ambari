@@ -22,19 +22,7 @@ from resource_management.core.resources.system import Execute
 
 class ZeppelinServiceCheck(Script):
     def service_check(self, env):
-        import params
-        env.set_params(params)
-
-        if params.security_enabled:
-          kinit_cmd = format("{kinit_path_local} -kt {smoke_user_keytab} {smokeuser_principal}; ")
-          Execute(kinit_cmd, user=params.smoke_user)
-
-        scheme = "https" if params.ui_ssl_enabled else "http"
-        Execute(format("curl -s -o /dev/null -w'%{{http_code}}' --negotiate -u: -k {scheme}://{zeppelin_host}:{zeppelin_port}/api/version | grep 200"),
-                tries=10,
-                try_sleep=3,
-                user=params.smoke_user,
-                logoutput=True)
+        return True
 
 if __name__ == "__main__":
     ZeppelinServiceCheck().execute()

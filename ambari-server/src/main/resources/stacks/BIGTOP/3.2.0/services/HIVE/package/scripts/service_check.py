@@ -42,29 +42,7 @@ class HiveServiceCheck(Script):
     Logger.initialize_logger()
 
   def service_check(self, env):
-    import params
-    env.set_params(params)
-
-    if params.security_enabled:
-      kinit_cmd = format(
-        "{kinit_path_local} -kt {smoke_user_keytab} {smokeuser_principal}; ")
-    else:
-      kinit_cmd = ""
-
-    # Check HiveServer
-    Logger.info("Running Hive Server checks")
-    Logger.info("--------------------------\n")
-    self.check_hive_server(env, 'Hive Server', kinit_cmd, params.hive_server_hosts,
-                           int(format("{hive_server_port}")), params.hive_ssl_keystore_path, params.hive_ssl_keystore_password)
-    # Check HCAT
-    Logger.info("Running HCAT checks")
-    Logger.info("-------------------\n")
-    hcat_service_check()
-
-    # Check WEBHCAT
-    Logger.info("Running WEBHCAT checks")
-    Logger.info("---------------------\n")
-    webhcat_service_check()
+    return True
 
   def check_hive_server(self, env, server_component_name, kinit_cmd, address_list, server_port, ssl_keystore, ssl_password):
     import params

@@ -39,76 +39,7 @@ class TezServiceCheck(Script):
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class TezServiceCheckLinux(TezServiceCheck):
   def service_check(self, env):
-    import params
-    env.set_params(params)
-
-    path_to_tez_jar = format(params.tez_examples_jar)
-    wordcount_command = format("jar {path_to_tez_jar} orderedwordcount /tmp/tezsmokeinput/sample-tez-test /tmp/tezsmokeoutput/")
-    test_command = format("fs -test -e /tmp/tezsmokeoutput/_SUCCESS")
-
-    File(format("{tmp_dir}/sample-tez-test"),
-      content = "foo\nbar\nfoo\nbar\nfoo",
-      mode = 0755
-    )
-
-    params.HdfsResource("/tmp/tezsmokeoutput",
-      action = "delete_on_execute",
-      type = "directory"
-    )
-
-    params.HdfsResource("/tmp/tezsmokeinput",
-      action = "create_on_execute",
-      type = "directory",
-      owner = params.smokeuser,
-    )
-    params.HdfsResource("/tmp/tezsmokeinput/sample-tez-test",
-      action = "create_on_execute",
-      type = "file",
-      owner = params.smokeuser,
-      source = format("{tmp_dir}/sample-tez-test"),
-    )
-
-    if params.stack_version_formatted and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.stack_version_formatted):
-      copy_to_hdfs("tez", params.user_group, params.hdfs_user, skip=params.sysprep_skip_copy_tarballs_hdfs)
-    else:
-      # If the directory already exists, it is a NO-OP
-      params.HdfsResource(params.tez_lib_base_dir_path,
-                          type="directory",
-                          action="create_on_execute",
-                          owner=params.smokeuser,
-                          )
-      # If the file already exists, it is a NO-OP
-      params.HdfsResource(params.tez_lib_uris,
-                          action = "create_on_execute",
-                          type = "file",
-                          owner = params.smokeuser,
-                          source = format("{tez_home}/lib/tez.tar.gz"),
-                          )
-
-
-    params.HdfsResource(None, action = "execute")
-
-    if params.security_enabled:
-      kinit_cmd = format("{kinit_path_local} -kt {smoke_user_keytab} {smokeuser_principal};")
-      Execute(kinit_cmd,
-              user=params.smokeuser
-      )
-
-    ExecuteHadoop(wordcount_command,
-      tries = 3,
-      try_sleep = 5,
-      user = params.smokeuser,
-      conf_dir = params.hadoop_conf_dir,
-      bin_dir = params.hadoop_bin_dir
-    )
-
-    ExecuteHadoop(test_command,
-      tries = 10,
-      try_sleep = 6,
-      user = params.smokeuser,
-      conf_dir = params.hadoop_conf_dir,
-      bin_dir = params.hadoop_bin_dir
-    )
+    return True
 
 
 @OsFamilyImpl(os_family=OSConst.WINSRV_FAMILY)
